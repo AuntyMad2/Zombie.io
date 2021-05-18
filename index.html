@@ -23,6 +23,12 @@ my zombie map
 <div id="zombie_map"></div>
 <script>
        var zombie_map;
+       var tolerance = 10;
+       var count =0;
+       var score =0;
+       
+
+
 
        var data =`-33.32634549113362 115.63108408122754 weapons.png 
 -33.32831120136668 115.63299363883343 weapons.png 
@@ -63,9 +69,9 @@ my zombie map
 -33.32720081734233 115.63250542215474 zombie.png 
 -33.32691843693886 115.63166857294209 zombie.png`;
 
-var markers = data.split("\n");
+
 var all_markers=[];
-var count =0;
+       var markers = data.split("\n");
 
 
        
@@ -89,6 +95,7 @@ else {
 old_position = new google.maps.Marker({
 position:{lat: -33.32797253826916, lng: 115.63256065551876},
 map: zombie_map 
+});
 
 
 function set_my_position(position) {
@@ -104,7 +111,35 @@ var marker = new google.maps.Marker({
 		icon: "player.png",
 		map: zombie_map
 
-		});
+});
+old_position = marker;
+
+for (var i=0; i<all_markers.length; i++) {
+var distance = google.maps.geometry.spherical.computeDistanceBetween(pos, all_markers[i].getPosition());
+
+if (distance <tolerance ){
+var what_is_it = all_markers[i].getIcon();
+what_is_it = what_is_it.replace(".png", "");
+alert("found the "+ what_is_it);
+all_markers[i].setMap(null);
+
+if (what_is_it != "zombie") {
+score +=30;
+alert ("Your score is "+score);
+all_markers[i].setMap(null);
+console.log(count);
+}
+else {
+score -=10
+alert ("Your score is "+score);
+console.log(count);
+}
+
+}
+}
+
+
+
 }
 
 	
@@ -130,7 +165,7 @@ count++;
 </script>
 
 <script async defer
-   src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyDr6cEjnnRlWzNvOdS5UxJlG-l4jPQeTzQ&callback=initMap">
+   src ="https://maps.googleapis.com/maps/api/js?key=AIzaSyDr6cEjnnRlWzNvOdS5UxJlG-l4jPQeTzQ&callback=initMap&libraries=geometry">
  </script>
 
 	
